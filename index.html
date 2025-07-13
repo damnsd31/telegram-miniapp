@@ -6,68 +6,61 @@
   <title>Арбитражный помощник</title>
   <style>
     html, body {
-      font-size: 16px;
-      -webkit-text-size-adjust: 100%;
-      -webkit-tap-highlight-color: transparent;
-    }
-
-    body {
-      width: 100%;
-      max-width: 480px;
-      margin: 0 auto;
-      padding: 24px;
+      padding: 0;
+      margin: 0;
       font-family: system-ui, sans-serif;
       background-color: #1e1e1e;
       color: #eaeaea;
+      width: 100%;
+      min-height: 100vh;
       display: flex;
       flex-direction: column;
       align-items: center;
       box-sizing: border-box;
+      font-size: 16px;
     }
 
-    h1 {
-      font-size: 20px;
-      font-weight: 600;
-      margin-bottom: 24px;
+    main {
+      width: 100%;
+      max-width: 420px;
+      padding: 24px 16px 80px;
+      box-sizing: border-box;
+    }
+
+    h1, h2 {
       text-align: center;
+      margin-bottom: 24px;
     }
 
-    .button {
+    .button, button {
       display: block;
       width: 100%;
-      max-width: 320px;
+      padding: 14px;
       margin: 10px auto;
-      padding: 14px 16px;
       font-size: 17px;
       background-color: #2a2a2a;
       border: 1px solid #444;
       border-radius: 12px;
-      text-align: center;
       color: #eaeaea;
+      text-align: center;
       cursor: pointer;
       transition: all 0.2s ease;
     }
 
-    .button:hover {
+    .button:hover, button:hover {
       background-color: #383838;
     }
 
-    .hidden {
-      display: none;
-    }
-
-    input[type="text"],
-    input[type="datetime-local"] {
-      padding: 12px;
-      font-size: 17px;
+    input[type="text"], input[type="datetime-local"] {
       width: 100%;
-      max-width: 300px;
-      margin: 10px auto;
-      display: block;
-      border: 1px solid #555;
+      padding: 12px;
+      font-size: 16px;
       border-radius: 8px;
+      border: 1px solid #555;
       background-color: #2a2a2a;
       color: #eaeaea;
+      box-sizing: border-box;
+      margin-bottom: 12px;
     }
 
     .card {
@@ -75,12 +68,11 @@
       border: 1px solid #444;
       border-radius: 10px;
       padding: 12px 16px;
-      margin-bottom: 12px;
+      margin-bottom: 16px;
     }
 
     .card-title {
-      font-weight: 600;
-      margin-bottom: 4px;
+      font-weight: bold;
       font-size: 17px;
     }
 
@@ -90,158 +82,153 @@
       margin-bottom: 8px;
     }
 
-    #caseSearch {
-      width: 100%;
-      max-width: 300px;
-      padding: 10px;
-      margin: 0 auto 16px;
-      display: block;
-      font-size: 16px;
-      border-radius: 8px;
-      border: 1px solid #555;
-      background-color: #2a2a2a;
-      color: #eaeaea;
+    .actions {
+      display: flex;
+      justify-content: space-between;
+      gap: 10px;
+    }
+
+    .actions button {
+      flex: 1;
+      margin: 4px 0;
+    }
+
+    .back-button {
+      font-size: 14px;
+      opacity: 0.6;
     }
   </style>
 </head>
 <body>
-  <div id="menu">
+  <main>
     <h1>Арбитражный помощник</h1>
-    <div class="button" onclick="showMyCases()">📁 Мои дела</div>
-    <div class="button" onclick="showSearch()">🔍 Найти практику</div>
-    <div class="button" onclick="Telegram.WebApp.close()">❌ Закрыть</div>
-  </div>
+    <div id="app">
+      <div id="menu">
+        <button onclick="showCases()">📁 Мои дела</button>
+        <button onclick="alert('Скоро!')">🔍 Найти практику</button>
+        <button onclick="Telegram.WebApp.close()">❌ Закрыть</button>
+      </div>
 
-  <div id="cases" class="hidden">
-    <h1>Мои дела</h1>
-    <input type="text" id="caseSearch" placeholder="Поиск по названию или номеру" oninput="renderCaseList()" />
-    <div id="caseList"></div>
-    <div class="button" onclick="showCaseForm()">➕ Добавить дело</div>
-    <div class="button" onclick="showMenu()">🔙 Назад в меню</div>
-  </div>
+      <div id="cases" class="hidden">
+        <h2>Мои дела</h2>
+        <input type="text" id="caseSearch" placeholder="Поиск по названию или номеру" oninput="renderCases()">
+        <div id="caseList"></div>
+        <button onclick="addCase()">➕ Добавить дело</button>
+        <button class="back-button" onclick="showMenu()">⬅️ Назад в меню</button>
+      </div>
 
-  <div id="caseForm" class="hidden">
-    <h1>Новое дело</h1>
-    <input type="text" id="caseName" placeholder="Название должника" />
-    <input type="text" id="caseNumber" placeholder="Номер дела" />
-    <div class="button" onclick="addCase()">✅ Сохранить</div>
-    <div class="button" onclick="showMyCases()">🔙 Назад</div>
-  </div>
+      <div id="hearings" class="hidden">
+        <h2>Заседания</h2>
+        <div id="hearingList"></div>
+        <input type="datetime-local" id="hearingDate">
+        <input type="text" id="hearingComment" placeholder="Комментарий (опционально)">
+        <button onclick="addHearing()">➕ Добавить заседание</button>
+        <button class="back-button" onclick="showCases()">⬅️ Назад к делам</button>
+      </div>
 
-  <div id="hearings" class="hidden">
-    <h1>Заседания</h1>
-    <div id="hearingList"></div>
-    <input type="datetime-local" id="hearingDate" />
-    <input type="text" id="hearingComment" placeholder="Комментарий (опционально)" />
-    <div class="button" onclick="addHearing()">➕ Добавить заседание</div>
-    <div class="button" onclick="showMyCases()">🔙 Назад к делам</div>
-  </div>
-
-  <div id="search" class="hidden">
-    <h1>Поиск по ИНН/ОГРН</h1>
-    <input type="text" id="searchInput" placeholder="Введите ИНН или ОГРН" />
-    <div class="button" onclick="searchKad()">Найти</div>
-    <div class="button" onclick="showMenu()">🔙 Назад</div>
-  </div>
+      <div id="tasks" class="hidden">
+        <h2>Задачи</h2>
+        <p>Функциональность в разработке</p>
+        <button class="back-button" onclick="showCases()">⬅️ Назад к делам</button>
+      </div>
+    </div>
+  </main>
 
   <script>
-    let currentCaseIndex = null;
+    let cases = [
+      {
+        name: 'ООО «ЗАБАВА»',
+        number: 'А40-1231233/2024',
+        hearings: [
+          { date: '2025-08-14T06:20', comment: 'Оспаривание, принести дкп на тачку' }
+        ]
+      }
+    ];
 
-    function hideAll() {
-      ["menu", "cases", "caseForm", "hearings", "search"].forEach(id => {
-        document.getElementById(id).classList.add("hidden");
-      });
-    }
+    let currentCaseIndex = 0;
 
     function showMenu() {
       hideAll();
-      document.getElementById("menu").classList.remove("hidden");
+      document.getElementById('menu').classList.remove('hidden');
     }
 
-    function showMyCases() {
+    function showCases() {
       hideAll();
-      document.getElementById("cases").classList.remove("hidden");
-      renderCaseList();
-    }
-
-    function showCaseForm() {
-      hideAll();
-      document.getElementById("caseForm").classList.remove("hidden");
-    }
-
-    function showSearch() {
-      hideAll();
-      document.getElementById("search").classList.remove("hidden");
+      document.getElementById('cases').classList.remove('hidden');
+      renderCases();
     }
 
     function showHearings(index) {
       hideAll();
       currentCaseIndex = index;
-      document.getElementById("hearings").classList.remove("hidden");
+      document.getElementById('hearings').classList.remove('hidden');
       renderHearings();
     }
 
-    function addCase() {
-      const name = document.getElementById("caseName").value.trim();
-      const number = document.getElementById("caseNumber").value.trim();
-      if (!name || !number) return alert("Заполните оба поля");
-      const cases = JSON.parse(localStorage.getItem("myCases") || "[]");
-      cases.push({ name, number, hearings: [] });
-      localStorage.setItem("myCases", JSON.stringify(cases));
-      showMyCases();
+    function showTasks(index) {
+      hideAll();
+      currentCaseIndex = index;
+      document.getElementById('tasks').classList.remove('hidden');
     }
 
-    function renderCaseList() {
-      const search = document.getElementById("caseSearch").value.toLowerCase();
-      const cases = JSON.parse(localStorage.getItem("myCases") || "[]");
-      const container = document.getElementById("caseList");
-      container.innerHTML = "";
+    function hideAll() {
+      document.querySelectorAll('#app > div').forEach(el => el.classList.add('hidden'));
+    }
 
-      cases.forEach((c, i) => {
-        if (!c.name.toLowerCase().includes(search) && !c.number.toLowerCase().includes(search)) return;
-        const div = document.createElement("div");
-        div.className = "card";
-        div.innerHTML = `
-          <div class="card-title">📁 ${c.name}</div>
-          <div class="card-sub">№ ${c.number}</div>
-          <div class="button" onclick="showHearings(${i})">📅 Заседания</div>
-          <div class="button" onclick="alert('Задачи скоро будут')">📌 Задачи</div>
-        `;
-        container.appendChild(div);
+    function renderCases() {
+      const list = document.getElementById('caseList');
+      const query = document.getElementById('caseSearch').value.toLowerCase();
+      list.innerHTML = '';
+      cases.forEach((c, index) => {
+        if (
+          c.name.toLowerCase().includes(query) ||
+          c.number.toLowerCase().includes(query)
+        ) {
+          const card = document.createElement('div');
+          card.className = 'card';
+          card.innerHTML = `
+            <div class="card-title">📁 ${c.name}</div>
+            <div class="card-sub">№ ${c.number}</div>
+            <div class="actions">
+              <button onclick="showHearings(${index})">📅 Заседания</button>
+              <button onclick="showTasks(${index})">📌 Задачи</button>
+            </div>
+          `;
+          list.appendChild(card);
+        }
       });
     }
 
     function renderHearings() {
-      const cases = JSON.parse(localStorage.getItem("myCases") || "[]");
-      const hearings = cases[currentCaseIndex].hearings || [];
-      const list = document.getElementById("hearingList");
-      list.innerHTML = hearings.length ? "" : "<p style='text-align:center;'>Нет заседаний</p>";
-      hearings.forEach(h => {
-        const p = document.createElement("p");
-        p.textContent = `${new Date(h.date).toLocaleString()} — ${h.comment || "без комментария"}`;
-        list.appendChild(p);
-      });
+      const container = document.getElementById('hearingList');
+      const hlist = cases[currentCaseIndex].hearings;
+      container.innerHTML = hlist.map(h => {
+        const date = new Date(h.date).toLocaleString('ru-RU');
+        return `<div class="card">${date} — ${h.comment}</div>`;
+      }).join('');
     }
 
     function addHearing() {
-      const date = document.getElementById("hearingDate").value;
-      const comment = document.getElementById("hearingComment").value.trim();
-      if (!date) return alert("Выберите дату заседания");
-      const cases = JSON.parse(localStorage.getItem("myCases") || "[]");
-      cases[currentCaseIndex].hearings.push({ date, comment });
-      localStorage.setItem("myCases", JSON.stringify(cases));
-      document.getElementById("hearingDate").value = "";
-      document.getElementById("hearingComment").value = "";
-      renderHearings();
+      const date = document.getElementById('hearingDate').value;
+      const comment = document.getElementById('hearingComment').value;
+      if (date) {
+        cases[currentCaseIndex].hearings.push({ date, comment });
+        document.getElementById('hearingDate').value = '';
+        document.getElementById('hearingComment').value = '';
+        renderHearings();
+      }
     }
 
-    function searchKad() {
-      const val = document.getElementById("searchInput").value.trim();
-      if (!val) return alert("Введите ИНН или ОГРН");
-      window.open(`https://kad.arbitr.ru/Search/quick?Query=${encodeURIComponent(val)}`, "_blank");
+    function addCase() {
+      const name = prompt('Введите название должника');
+      const number = prompt('Введите номер дела');
+      if (name && number) {
+        cases.push({ name, number, hearings: [] });
+        renderCases();
+      }
     }
 
-    if (window.Telegram) Telegram.WebApp.ready();
+    showMenu();
   </script>
 </body>
 </html>
