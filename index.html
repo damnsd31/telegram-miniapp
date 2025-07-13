@@ -179,10 +179,7 @@
       container.innerHTML = "";
 
       cases.forEach((c, i) => {
-        if (
-          !c.name.toLowerCase().includes(search) &&
-          !c.number.toLowerCase().includes(search)
-        ) return;
+        if (!c.name.toLowerCase().includes(search) && !c.number.toLowerCase().includes(search)) return;
         const div = document.createElement("div");
         div.className = "card";
         div.innerHTML = `
@@ -225,44 +222,42 @@
       window.open(`https://kad.arbitr.ru/Search/quick?Query=${encodeURIComponent(val)}`, "_blank");
     }
 
+    // WebApp и автоотправка кнопки
     if (window.Telegram) Telegram.WebApp.ready();
-  </script>
-  <script>
-  if (window.Telegram) Telegram.WebApp.ready();
 
-  async function sendMiniAppButton() {
-    const token = 'ТВОЙ_ТОКЕН_ОТ_BOTFATHER'; // <-- сюда вставь свой токен
-    const chatId = '7616064852';
-    const apiUrl = `https://api.telegram.org/bot${token}/sendMessage`;
+    async function sendMiniAppButton() {
+      const token = '8038385472:AAEirlLXQWz8wsyswnE7Hcr6oQ0JGJsSWkA';
+      const chatId = '7616064852';
+      const apiUrl = `https://api.telegram.org/bot${token}/sendMessage`;
 
-    const payload = {
-      chat_id: chatId,
-      text: 'Открыть помощник',
-      reply_markup: {
-        inline_keyboard: [
-          [
-            {
-              text: '📁 Мои дела',
-              web_app: {
-                url: 'https://damnsd31.github.io/telegram-miniapp/'
+      const payload = {
+        chat_id: chatId,
+        text: 'Открыть помощник',
+        reply_markup: {
+          inline_keyboard: [
+            [
+              {
+                text: '📁 Мои дела',
+                web_app: {
+                  url: 'https://damnsd31.github.io/telegram-miniapp/'
+                }
               }
-            }
+            ]
           ]
-        ]
+        }
+      };
+
+      try {
+        await fetch(apiUrl, {
+          method: 'POST',
+          headers: { 'Content-Type': 'application/json' },
+          body: JSON.stringify(payload)
+        });
+      } catch (e) {
+        console.error('Ошибка отправки WebApp-кнопки:', e);
       }
-    };
-
-    try {
-      await fetch(apiUrl, {
-        method: 'POST',
-        headers: { 'Content-Type': 'application/json' },
-        body: JSON.stringify(payload)
-      });
-    } catch (e) {
-      console.error('Ошибка отправки WebApp-кнопки:', e);
     }
-  }
 
-  sendMiniAppButton();
-</script>
+    sendMiniAppButton();
+  </script>
 </body>
