@@ -1,0 +1,42 @@
+<!DOCTYPE html>
+<html>
+  <head>
+    <meta charset="utf-8" />
+    <title>Арбитражный помощник</title>
+    <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+    <script src="telegram.js"></script>
+    <style>
+      body {
+        font-family: sans-serif;
+        text-align: center;
+        padding: 20px;
+        background-color: #f7f7f7;
+      }
+      button {
+        display: block;
+        width: 90%;
+        max-width: 300px;
+        margin: 10px auto;
+        padding: 15px;
+        font-size: 18px;
+        background-color: #2a9fd6;
+        color: white;
+        border: none;
+        border-radius: 8px;
+        cursor: pointer;
+      }
+      button:hover {
+        background-color: #238ac9;
+      }
+    </style>
+  </head>
+  <body>
+    <h1>Арбитражный помощник</h1>
+    <button>🔍 Найти практику</button>
+    <button>🧮 Калькулятор пошлины</button>
+    <button>📄 Шаблоны документов</button>
+    <button>📚 Законы</button>
+    <br>
+    <button onclick="Telegram.WebApp.close()">❌ Закрыть</button>
+  </body>
+</html>
